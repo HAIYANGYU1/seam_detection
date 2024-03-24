@@ -1,4 +1,3 @@
-
 """
 Distributed training script for scene segmentation with S3DIS dataset
 """
