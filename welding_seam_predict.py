@@ -1,4 +1,3 @@
-
 import numpy as np
 import open3d as o3d
 import torch
@@ -8,6 +7,7 @@ from openpoints.models import build_model_from_cfg
 from openpoints.models.layers import torch_grouping_operation, knn_point
 from openpoints.dataset import build_dataloader_from_cfg, get_class_weights, get_features_by_keys
 
+np.set_printoptions(suppress=True, precision=6)
 
 NUMBER_OF_SAMPLING_POINTS = 5_000
 
@@ -107,18 +107,20 @@ def welding_seam_detect(obj_file_path):
     preds = pred.max(dim=1)[1]
     preds_np = preds.detach().cpu().numpy()
 
-    
+    pred = preds_np.reshape(2048,1)
+    pos = data['pos'].detach().cpu().numpy().reshape(2048, 3)
+    concatenated = np.concatenate((pred, pos), axis=1)
 
-    return preds_np
+    return concatenated
+
 
     # cls2parts = [[0, 1, 2, 3], [4, 5], [6, 7], [8, 9, 10, 11], [12, 13, 14, 15], [16, 17, 18], [19, 20, 21], [22, 23], [24, 25, 26, 27], [28, 29], [30, 31, 32, 33, 34, 35], [36, 37], [38, 39, 40], [41, 42, 43], [44, 45, 46], [47, 48, 49]]
 
     # part_seg_refinement(preds, data['pos'], data['cls'],cls2parts , cfg.get('refine_n', 10))
 
 
-
-
 if __name__ == "__main__":
     obj_file_path = "./11644642_met_tl_asm.obj"
     pred = welding_seam_detect(obj_file_path=obj_file_path)
     print(pred)
+    np.savetxt("11644642_met_tl_asm.csv", pred, delimiter=',', fmt='%.6f')
