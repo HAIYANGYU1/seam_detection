@@ -61,7 +61,6 @@ def part_seg_refinement(pred, pos, cls, cls2parts, n=10):
 
 def welding_seam_detect(obj_file_path):
 
-    # 加载配置文件
     cfg = EasyConfig()
     cfg.load(CONFIG_FILE_PATH, recursive=True)
     model = build_model_from_cfg(cfg.model).cuda()
