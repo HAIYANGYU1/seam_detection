@@ -527,9 +527,9 @@ def welding_seam_train_prepare(folder_data):
     
 def welding_seam_train():
     cfg = EasyConfig()
-    # 加载配置文件
+
     cfg.load(CONFIG_PATH, recursive=True)
-    # 设置随机数
+
     if cfg.seed is None:
         cfg.seed = np.random.randint(1, 10000)
 
