@@ -20,16 +20,12 @@ ROOT = os.path.dirname(CURRENT_PATH)
 # ROOT = os.path.dirname(BASE)
 
 from welding_seam_predict import welding_seam_detect
+from welding_seam_train import welding_seam_train,welding_seam_train_prepare,obj2txt,update_train_test_json
 
 
-def matching(data_folder,xml_file,obj_file,model,dienst_number,save_image=False,auto_del=False):
-    
-    if dienst_number==64:
-        obj_file=os.path.join(ROOT,data_folder,obj_file)
-        pred = welding_seam_detect(obj_file)
-        print(f"pred={pred}")
-    
+def matching(data_folder,xml_file,model,dienst_number,save_image=False,auto_del=False):
     if dienst_number==62:
+
         training_dir=os.path.join(ROOT,data_folder,'training')
         xml_list=os.listdir(training_dir)
         for file in xml_list:
@@ -72,6 +68,24 @@ def matching(data_folder,xml_file,obj_file,model,dienst_number,save_image=False,
             print("pointnext training finished")
             return
     
+    # pcd for training
+    if dienst_number==63:
+        welding_seam_train_prepare(data_folder)
+        update_train_test_json()
+        welding_seam_train()
+
+    # obj for training
+    if dienst_number==64:
+        obj2txt(data_folder)
+        update_train_test_json()
+        welding_seam_train()
+
+    # detect function
+    if dienst_number==65:
+        obj_file = xml_file.replace(".xml",".obj")
+        obj_file=os.path.join(ROOT,data_folder,'train',obj_file)
+        pred = welding_seam_detect(obj_file)
+        print(f"pred={pred}")
 
     else:
         start_time=time.time()
@@ -162,8 +176,8 @@ if __name__ == "__main__":
 
     data_folder=os.path.join(ROOT,'data')
     xml='Reisch_origin.xml'
-    obj = "11644642_met_tl_asm.obj"
     model='pointnext'
     dienst_number=62## 62 training_similarity;63 similarity; 61 pose estimation
-    matching(data_folder, xml, obj, model,dienst_number,save_image=False,auto_del=False)
+
+    matching(data_folder, xml, model,dienst_number,save_image=False,auto_del=False)
 
