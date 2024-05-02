@@ -19,7 +19,7 @@ CURRENT_PATH = os.path.abspath(__file__)
 ROOT = os.path.dirname(CURRENT_PATH)
 # ROOT = os.path.dirname(BASE)
 
-from welding_seam_predict import welding_seam_detect
+from welding_seam_detect import welding_seam_detect
 from welding_seam_train import welding_seam_train,welding_seam_train_prepare,obj2txt,update_train_test_json
 
 
